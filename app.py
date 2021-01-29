@@ -11,7 +11,6 @@ from flask_cors import CORS
 import db
 from views import posts, comments
 
-
 app = Flask(__name__)
 CORS(app)
 db.init_database_connection(app)

@@ -1,8 +1,9 @@
 import os
 from flask_mongoengine import MongoEngine
 
+
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(override=True)
 
 def init_database_connection(app):
     app.config['MONGODB_SETTINGS'] = {
