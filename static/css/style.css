@@ -100,6 +100,9 @@ main {
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
+.btn-delete {
+    margin-right: 5px}
+
 .btn:hover, .btn:active {
     background-color: #EEE;
     border-color: #61428f;
@@ -130,4 +133,9 @@ main {
 }
 .align-right a, .align-right btn {
     margin-left: 5px;
+}
+
+.comment-style {
+    font-style: italic;
+
 }

@@ -25,12 +25,24 @@
             <form id="post-form" class="hide"></form>
 
             <!-- TODO: Add the comments associated with this blog below: -->
+            <h1><strong> Comments: </strong></h1>
+            <div id="comments" class="comment-style">
+            </div>
 
-
-
+            <h1>New Comment</h1>
+            <form id="comment-form">
+                <div class="input-section">
+                    <label for="author">Author</label>
+                    <input type="text" name="author" id="author">
+                </div>
+                <div class="input-section">
+                    <label for="comment_text">Comment</label>
+                    <textarea name="comment_text" id="comment_text"></textarea>
+                </div>
+                <button class="btn btn-main" id="save-comment" type="submit">Save</button>
+                <a class="btn" href="/">Cancel</a>
+            </form>
         </main>
-
-
 
         <!--  JavaScript files right before the closing body tag -->
         <script type="text/javascript" src="/static/js/post-detail.js"></script>

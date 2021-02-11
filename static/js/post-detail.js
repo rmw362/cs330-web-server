@@ -17,6 +17,39 @@ const getPost = () => {
         });
 };
 
+// gets comments from the server:
+const getComments = () => {
+    // fetch comments:
+    fetch('/api/comments/?post_id=' + id)
+        .then(response => {
+            return response.json();
+        })
+        .then(displayComments);
+};
+
+
+const displayComments = (comments) => {
+    console.log(comments);
+    let commentHTML = '';
+    for (const comment of comments) {
+        commentHTML += `<section class="comment">
+            <p>${comment.comment}</p>
+            <strong>Author: </strong>${comment.author}
+        </section>
+        <section class="align-right">
+            <button class="btn delete-comment" data-comment-id=${comment._id.$oid}>Delete</button>
+        </section>
+        `;
+        console.log(comment.id);
+    }
+    document.querySelector('#comments').innerHTML = commentHTML;
+    const commentButtons = document.querySelectorAll('.delete-comment');
+    for (const deleteButton of commentButtons) {
+        deleteButton.onclick = deleteComment;
+}
+
+}
+
 // updates the post:
 const updatePost = (ev) => {
     const data = {
@@ -43,6 +76,28 @@ const updatePost = (ev) => {
     ev.preventDefault();
 };
 
+// updates the comments:
+const updateComments = (ev) => {
+    const data = {
+        author: document.querySelector('#author').value,
+        comment: document.querySelector('#comment_text').value,
+        post: activePost.id
+    };
+    console.log(data);
+    fetch('/api/comments/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(getComments)
+        .then(renderCommentsForm);
+    ev.preventDefault()
+};
+
 const deletePost = (ev) => {
     const doIt = confirm('Are you sure you want to delete this blog post?');
     if (!doIt) {
@@ -62,6 +117,26 @@ const deletePost = (ev) => {
     });
     ev.preventDefault()
 };
+
+const deleteComment = (ev) => {
+    const doIt = confirm('Are you sure you want to delete this comment?');
+    if (!doIt) {
+        return;
+    }
+    const button = ev.currentTarget;
+    const commentID = button.getAttribute('data-comment-id');
+    console.log('TODO: Delete comment using fetch:', commentID);
+    fetch('/api/comments/' + commentID + '/', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(getComments);
+    ev.preventDefault()
+};
+
 
 // creates the HTML to display the post:
 const renderPost = (ev) => {
@@ -108,6 +183,23 @@ const renderForm = () => {
     toggleVisibility('edit');
 };
 
+const renderCommentsForm = () => {
+    const htmlSnippet = `
+            <div class="input-section">
+                <label for="author">Author</label>
+                <input type="text" name="author" id="author">
+            </div>
+            <div class="input-section">
+                <label for="comment_text">Comment</label>
+                <textarea name="comment_text" id="comment_text"></textarea>
+            </div>
+            <button class="btn btn-main" id="save-comment" type="submit">Save</button>
+            <a class="btn" href="/">Cancel</a>
+    `;
+
+    document.querySelector('#comment-form').innerHTML = htmlSnippet;
+};
+
 const formatDate = (date) => {
     const options = { 
         weekday: 'long', year: 'numeric', 
@@ -136,11 +228,13 @@ const showConfirmation = () => {
 
 // called when the page loads:
 const initializePage = () => {
-    // get the post from the server:
+    // get the posts and comments from the server:
     getPost();
+    getComments();
     // add button event handler (right-hand corner:
     document.querySelector('#edit-button').onclick = renderForm;
     document.querySelector('#delete-button').onclick = deletePost;
+    document.querySelector('#save-comment').onclick = updateComments;
 };
 
 initializePage();

@@ -7,7 +7,11 @@ import json
 class CommentListEndpoint(Resource):
     
     def get(self):
-        data = models.Comment.objects
+        post_id = request.args.get('post_id')
+        if post_id:
+            data = models.Comment.objects.filter(post=post_id)
+        else:
+            data = models.Comment.objects
         data = data.to_json()
         return Response(data, mimetype="application/json", status=200)
 
@@ -27,6 +31,7 @@ class CommentDetailEndpoint(Resource):
         comment.comment = request_data.get('comment')
         comment.author = request_data.get('author')
         comment.post = request_data.get('post')
+        comment.id = request_data.get('id')
         comment.save()
         print(comment.to_json())
         return Response(comment.to_json(), mimetype="application/json", status=200)
